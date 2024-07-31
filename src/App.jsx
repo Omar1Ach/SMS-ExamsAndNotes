@@ -1,26 +1,23 @@
-import { useState } from 'react'
-import {BrowserRouter as Router, Route } from 'react-router-dom'
-import Header from './components/Header'
-import Sidebar from './components/SideBar'
-
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Planification from "./Pages/PlanificationPage";
+import Sidebar from "./components/Layouts/SideBar";
+import Header from "./components/Layouts/Header";
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
     <Router>
-    
-    <Header />
-    <Sidebar />
-    
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Header />
+          <div className="p-10">
+            <Routes>
+              <Route path="/Planification" element={<Planification />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
     </Router>
-
-    
-    
-
-    </>
-  )
+  );
 }
 
-export default App
+export default App;

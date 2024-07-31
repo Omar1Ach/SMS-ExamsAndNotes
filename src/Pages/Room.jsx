@@ -1,13 +1,10 @@
-import React from 'react'
+import React from "react";
 
 function Room() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
 
-  return (
-    
-  )
+  return <></>;
 }
 
-export default Room
+export default Room;
