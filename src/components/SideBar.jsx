@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaUser } from 'react-icons/fa';
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { MdMeetingRoom } from "react-icons/md";
@@ -26,23 +26,24 @@ const Sidebar = () => {
                             <div className="px-4 mt-10">
                                 <h2 className="text-xs font-semibold text-gray-400 uppercase">Menu</h2>
                                 <ul className="mt-3 space-y-2">
-                                <li>
+                                    <li>
                                         <a href="#" className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-300 p-2 rounded-md">
                                             <FaCalendarAlt className='text-gray-500' />
                                             <Link to='/Planification'>Planification</Link>
                                         </a>
                                     </li>
-                                    
+
                                     <li>
                                         <a href="#" className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md">
-                                        <MdMeetingRoom className='text-gray-500' />
+                                            <MdMeetingRoom className='text-gray-500' />
                                             <Link to='/RoomPage'>Les Salles</Link>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#" className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md">
-                                        <MdSupervisorAccount className='text-gray-500' />
-                                            <span>Surveillants</span>
+                                            <MdSupervisorAccount className='text-gray-500' />
+                                            <Link to='/Surveillants'>Surveillants</Link>
+
                                         </a>
                                     </li>
                                     <li>
@@ -51,15 +52,15 @@ const Sidebar = () => {
                                             <span>Profile</span>
                                         </a>
                                     </li>
-                                    
-                                 
+
+
                                 </ul>
                             </div>
                         </nav>
                     </div>
                 )}
                 <button onClick={toggleSidebar} className="absolute bottom-4 right-5 focus:outline-none ">
-                    {isOpen ? <IoIosArrowDropleft  className="text-2xl text-indigo-900" /> : <IoIosArrowDropright className="text-2xl text-gray-500" />}
+                    {isOpen ? <IoIosArrowDropleft className="text-2xl text-indigo-900" /> : <IoIosArrowDropright className="text-2xl text-gray-500" />}
                 </button>
             </div>
             <div className={`flex-1 transition-margin duration-300 ${isOpen ? 'ml-55' : 'ml-16'} overflow-auto`}>
