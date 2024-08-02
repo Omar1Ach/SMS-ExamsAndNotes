@@ -1,45 +1,60 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Input } from "../components/Atoms/Input";
+import ApiManager from "../api";
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 
 function PlanificationPage() {
-  const [date, setDate] = useState("");
-  const [error, setError] = useState("");
-  const [location, setLocation] = useState("etablissement");
-  const [customLocation, setCustomLocation] = useState("");
-  const [hours, setHours] = useState("12");
-  const [jury, setJury] = useState("");
-  const [minutes, setMinutes] = useState("00");
-  const [period, setPeriod] = useState("AM");
-  const [type, setType] = useState();
+  const Form = useForm();
+  const { register, handleSubmit } = Form;
+  const [rooms, setRooms] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
-  const handleDateChange = (e) => {
-    const selectedDate = new Date(e.target.value);
-    const currentDate = new Date();
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(currentDate.getDate() + 7);
-  };
 
   useEffect(() => {
-    const fetchSupervisors = async () => {
-      try {
-        const response = await fetch("https://localhost:7263/api/Supervisor");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log(data);
-        setSupervisors(data);
-      } catch (error) {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      }
-    };
-
     fetchSupervisors();
+    fetchRoom();
   }, []);
+  const onSubmit = (data) => {
+    const addExam = {
+      examDate: data.examDate,
+      duration: `${data.hour}:${data.minute}`,
+      startTime: `${data.Debuthour}:${data.Debutminute}`,
+      examType: parseInt(data.examtype),
+      yearId: data.Year,
+      yearType: parseInt(data.YearType),
+      filiereId: data.filiere,
+      unitOfFormationId: data.uof,
+      roomId: data.room,
+      supervisorId: data.supervisor,
+    };
+    console.log(addExam);
+
+    ApiManager.post("/Exam", addExam)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Error adding Exam:", error);
+      });
+  };
+
+  const fetchRoom = async () => {
+    try {
+      const response = await ApiManager.get("/Room");
+      setRooms(response.data);
+    } catch (error) {
+      console.error("Error fetching Room:", error);
+    }
+  };
+
+  const fetchSupervisors = async () => {
+    try {
+      const response = await ApiManager.get("/Supervisor");
+      setSupervisors(response.data);
+    } catch (error) {
+      console.error("Error fetching supervisors:", error);
+    }
+  };
 
   return (
     <>
@@ -48,37 +63,37 @@ function PlanificationPage() {
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
-                Planifier une Exam
+                Planifier une examen
               </h3>
             </div>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="p-6.5">
                 <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
                   <div className="w-full sm:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
                       Date <span className="text-meta-1">*</span>
                     </label>
-                    <Input
-                      value={date}
-                      type={"date"}
-                      onChange={handleDateChange}
+                    <input
+                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                      value={Form.examDate}
+                      type="date"
+                      {...register("examDate")}
                     />
-                    {error && <p className="text-red-500">{error}</p>}
                   </div>
                   <div className="w-full sm:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      L'heure <span className="text-meta-1">*</span>
+                      Duration <span className="text-meta-1">*</span>
                     </label>
                     <div className="flex space-x-2">
                       <select
-                        onChange={(e) => setHours(e.target.value)}
+                        {...register("hour")}
                         className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
                         required
                       >
                         <option disabled hidden selected>
                           Heur
                         </option>
-                        {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                        {Array.from({ length: 24 }, (_, i) => i + 1).map(
                           (hour) => (
                             <option key={hour} value={hour}>
                               {hour}
@@ -87,7 +102,7 @@ function PlanificationPage() {
                         )}
                       </select>
                       <select
-                        onChange={(e) => setMinutes(e.target.value)}
+                        {...register("minute")}
                         className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
                         required
                       >
@@ -102,17 +117,6 @@ function PlanificationPage() {
                           </option>
                         ))}
                       </select>
-                      <select
-                        onChange={(e) => setPeriod(e.target.value)}
-                        className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
-                        required
-                      >
-                        <option disabled hidden selected>
-                          Période
-                        </option>
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                      </select>
                     </div>
                   </div>
                 </div>
@@ -120,39 +124,59 @@ function PlanificationPage() {
                 <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
                   <div className="w-full sm:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Type de réunion <span className="text-meta-1">*</span>
+                      Start <span className="text-meta-1">*</span>
+                    </label>
+                    <div className="flex space-x-2">
+                      <select
+                        {...register("Debuthour")}
+                        className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                        required
+                      >
+                        <option disabled hidden selected>
+                          Heur
+                        </option>
+                        {Array.from({ length: 24 }, (_, i) => i + 1).map(
+                          (hour) => (
+                            <option key={hour} value={hour}>
+                              {hour}
+                            </option>
+                          )
+                        )}
+                      </select>
+                      <select
+                        {...register("Debutminute")}
+                        className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                        required
+                      >
+                        <option disabled hidden selected>
+                          Minutes
+                        </option>
+                        {Array.from({ length: 60 }, (_, i) =>
+                          i.toString().padStart(2, "0")
+                        ).map((minute) => (
+                          <option key={minute} value={minute}>
+                            {minute}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Les Salle <span className="text-meta-1">*</span>
                     </label>
                     <select
                       className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
                       required
-                      onChange={(e) => setType(e.target.value)}
+                      {...register("room")}
                     >
                       <option selected disabled hidden>
                         Choisissez réunion
                       </option>
-                      <option value={0}>Première réunion</option>
-                      <option value={1}>Deuxième réunion</option>
-                      <option value={2}>Troisième réunion</option>
-                      <option value={3}>Quatrième réunion</option>
-                    </select>
-                  </div>
-                  <div className="w-full sm:w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Jury <span className="text-meta-1">*</span>
-                    </label>
-                    <select
-                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
-                      onChange={(e) => setJury(e.target.value)}
-                      required
-                    >
-                      <option value="" selected disabled hidden>
-                        Liste de Jury
-                      </option>
-
-                      {supervisors?.map((Supervisor, i) => {
+                      {rooms?.map((room, i) => {
                         return (
-                          <option key={i} value={Supervisor.juryId}>
-                            {Supervisor.juryName}
+                          <option key={i} value={room.id}>
+                            {room.roomName}
                           </option>
                         );
                       })}
@@ -160,36 +184,100 @@ function PlanificationPage() {
                   </div>
                   <div className="w-full sm:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Lieu <span className="text-meta-1">*</span>
+                      Les Surveillant <span className="text-meta-1">*</span>
+                    </label>
+                    <select
+                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                      {...register("supervisor")}
+                      required
+                    >
+                      <option value="" selected disabled hidden>
+                        Liste des Surveillants
+                      </option>
+
+                      {supervisors?.map((Supervisor, i) => {
+                        return (
+                          <option key={i} value={Supervisor.id}>
+                            {Supervisor.firstName}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+
+                  <div className="w-full sm:w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Type examen <span className="text-meta-1">*</span>
                     </label>
                     <select
                       className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
                       required
+                      {...register("examtype")}
                     >
                       <option disabled hidden selected>
-                        Choisissez le Lieu
+                        Choisissez le examen
                       </option>
-                      <option value="etablissement">Établissement</option>
-                      <option value="autre">Autre</option>
+                      <option value="0">Practical</option>
+                      <option value="1">Theoretical</option>
                     </select>
-                    {location === "autre" && (
-                      <input
-                        type="text"
-                        placeholder="Entrez le lieu"
-                        value={customLocation}
-                        className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] mt-2 bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
-                      />
-                    )}
                   </div>
                 </div>
+                <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
+                  <div className="w-full sm:w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Unite de formation <span className="text-meta-1">*</span>
+                    </label>
+                    <input
+                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                      value={Form.uof}
+                      type="text"
+                      {...register("uof")}
+                      placeholder="Unite de formation"
+                    />
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      L'année scolaire <span className="text-meta-1">*</span>
+                    </label>
+                    <input
+                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                      value={Form.Year}
+                      type="text"
+                      {...register("Year")}
+                      placeholder="L'année scolaire"
+                    />
+                  </div>
 
+                  <div className="w-full sm:w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Filière<span className="text-meta-1">*</span>
+                    </label>
+                    <input
+                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                      value={Form.filiere}
+                      type="text"
+                      {...register("filiere")}
+                      placeholder="Filière"
+                    />
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Niveau <span className="text-meta-1">*</span>
+                    </label>
+                    <select
+                      className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition disabled:cursor-default disabled:bg-whiter"
+                      required
+                      {...register("YearType")}
+                    >
+                      <option disabled hidden selected>
+                        Choisissez le examen
+                      </option>
+                      <option value="0">1er année</option>
+                      <option value="1">2éme année</option>
+                    </select>
+                  </div>
+                </div>
                 <div className="flex justify-end gap-4.5">
-                  <Link
-                    to="/Home"
-                    className="flex justify-center rounded bg-meta-1 py-2 px-6 font-medium text-white hover:bg-opacity-90"
-                  >
-                    Annuler
-                  </Link>
                   <button
                     type="submit"
                     className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
@@ -201,6 +289,7 @@ function PlanificationPage() {
             </form>
           </div>
         </div>
+        <DevTool control={Form.control} />
       </div>
     </>
   );
