@@ -26,7 +26,7 @@ const AddSurveillant = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5163/api/[controller]', formData);
+      const response = await axios.post('http://localhost:5163/api/supervisor', formData); // Use the correct URL
       if (response.status === 200) {
         Swal.fire({
           title: "Surveillant ajouté avec succès!",

@@ -9,7 +9,7 @@ const SurveillantList = () => {
 
   const fetchSurveillants = async () => {
     try {
-      const response = await axios.get('http://localhost:5163/api/[controller]');
+      const response = await axios.get('http://localhost:5163/api/supervisor'); // Use the correct URL
       setListData(response.data);
     } catch (error) {
       console.error('Error fetching surveillants:', error);
@@ -20,7 +20,7 @@ const SurveillantList = () => {
     fetchSurveillants();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (supervisorId) => {
     Swal.fire({
       title: "Êtes-vous sûr de vouloir supprimer cet élément ?",
       icon: "warning",
@@ -31,7 +31,7 @@ const SurveillantList = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5163/api/[controller]/${supervisorId}`);
+          await axios.delete(`http://localhost:5163/api/supervisor/${supervisorId}`); // Use the correct URL
           fetchSurveillants();
           Swal.fire("Supprimé!", "L'élément a été supprimé.", "success");
         } catch (error) {
