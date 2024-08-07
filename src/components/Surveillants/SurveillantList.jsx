@@ -9,7 +9,7 @@ const SurveillantList = () => {
 
   const fetchSurveillants = async () => {
     try {
-      const response = await axios.get('http://localhost:5163/api/supervisor'); // Use the correct URL
+      const response = await axios.get('http://localhost:5163/api/[controller]'); // Use the correct URL
       setListData(response.data);
     } catch (error) {
       console.error('Error fetching surveillants:', error);
