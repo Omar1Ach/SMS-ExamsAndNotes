@@ -14,7 +14,7 @@ const RoomList = () => {
     try {
       const response = await ApiManager.get('/Room');
       setListData(response.data);
-      console.log(response.data);
+      
     } catch (error) {
       console.error('Error fetching rooms:', error);
       toast.error('Erreur lors de la récupération des salles.');

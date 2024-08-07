@@ -20,7 +20,7 @@ const UpdateRoom = () => {
           setRoomType(roomData.roomType);
           setCapacity(roomData.capacity);
           setRoomName(roomData.roomName);
-          console.log(roomData);
+          
         } else {
 
           toast.error('Erreur lors de la récupération de la salle.');

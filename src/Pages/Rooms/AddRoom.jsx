@@ -22,7 +22,7 @@ const AddRoom = () => {
       capacity: parseInt(capacity) ,
       roomName: roomName,
     };
-    console.log(formData);
+    
 
     try {
       const response = await ApiManager.post('/Room', formData);
