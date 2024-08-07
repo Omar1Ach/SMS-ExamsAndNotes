@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const UpdateRoom = () => {
-  const { roomId } = useParams();
+  const { id } = useParams();
   const [roomType, setRoomType] = useState('');
   const [capacity, setCapacity] = useState('');
   const [roomName, setRoomName] = useState('');
@@ -14,13 +14,15 @@ const UpdateRoom = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await ApiManager.get(`/Room/${roomId}`);
+        const response = await ApiManager.get(`/Room/GetRoomById/${id}`);
         if (response.status === 200) {
           const roomData = response.data;
           setRoomType(roomData.roomType);
           setCapacity(roomData.capacity);
           setRoomName(roomData.roomName);
+          console.log(roomData);
         } else {
+
           toast.error('Erreur lors de la récupération de la salle.');
         }
       } catch (error) {
@@ -29,7 +31,7 @@ const UpdateRoom = () => {
       }
     };
     fetchRoom();
-  }, [roomId]);
+  }, [id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,14 +41,14 @@ const UpdateRoom = () => {
     }
 
     const formData = {
-      roomId: roomId,
+      id: id, 
       roomType: parseInt(roomType),
       capacity: parseInt(capacity),
       roomName: roomName,
     };
 
     try {
-      const response = await ApiManager.put(`/Room/${roomId}`, formData);
+      const response = await ApiManager.put(`/Room/${id}`, formData);
       if (response.status === 200) {
         toast.success("Salle mise à jour avec succès!");
         navigate('/room-list');

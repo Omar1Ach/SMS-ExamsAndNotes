@@ -88,7 +88,7 @@ const RoomList = () => {
               <p className="text-black">{room.capacity}</p>
             </div>
             <div className="hidden items-center justify-center text-2xl p-2.5 sm:flex xl:p-5 gap-3">
-              <Link to={`/update-room/${room.roomId}`}>
+              <Link to={`/update-room/${room.id}`}>
                 <FaRegEdit className='text-graydark cursor-pointer' />
               </Link>
               <RiDeleteBin5Line className='text-red-600 cursor-pointer' onClick={() => handleDelete(room.id)} />

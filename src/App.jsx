@@ -18,7 +18,7 @@ function App() {
               <Route path="/Planification" element={<Planification />} />
               <Route path="/add-room" element={<AddRoom />} />
               <Route path="/room-list" element={<RoomList />} />
-              <Route path="/update-room/:roomId" element={<UpdateRoom />} /> 
+              <Route path="/update-room/:id" element={<UpdateRoom />} /> 
             </Routes>
           </div>
         </div>
