@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ApiManager from '../../api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,9 +20,7 @@ const UpdateRoom = () => {
           setRoomType(roomData.roomType);
           setCapacity(roomData.capacity);
           setRoomName(roomData.roomName);
-          
         } else {
-
           toast.error('Erreur lors de la récupération de la salle.');
         }
       } catch (error) {
@@ -59,6 +57,10 @@ const UpdateRoom = () => {
       console.error('Error updating room:', error);
       toast.error(`Erreur réseau! ${error.message}`);
     }
+  };
+
+  const handleCancel = () => {
+    navigate('/room-list');
   };
 
   return (
@@ -122,12 +124,13 @@ const UpdateRoom = () => {
                 </div>
               </div>
               <div className="flex justify-end gap-4.5">
-                <Link
-                  to='/room-list'
+                <button
+                  type="button"
+                  onClick={handleCancel}
                   className="flex justify-center rounded bg-meta-1 py-2 px-6 font-medium text-white hover:bg-opacity-90"
                 >
                   Annuler
-                </Link>
+                </button>
                 <button
                   type='submit'
                   className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"

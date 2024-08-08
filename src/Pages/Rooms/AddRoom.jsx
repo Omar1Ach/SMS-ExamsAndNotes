@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ApiManager from '../../api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,10 +19,9 @@ const AddRoom = () => {
 
     const formData = {
       roomType: parseInt(roomType),
-      capacity: parseInt(capacity) ,
+      capacity: parseInt(capacity),
       roomName: roomName,
     };
-    
 
     try {
       const response = await ApiManager.post('/Room', formData);
@@ -35,6 +34,10 @@ const AddRoom = () => {
     } catch (error) {
       toast.error(`Erreur réseau! ${error.message}`);
     }
+  };
+
+  const handleCancel = () => {
+    navigate('/room-list');
   };
 
   return (
@@ -96,12 +99,13 @@ const AddRoom = () => {
                 </div>
               </div>
               <div className="flex justify-end gap-4.5">
-                <Link
-                  to='/Home'
+                <button
+                  type="button"
+                  onClick={handleCancel}
                   className="flex justify-center rounded bg-meta-1 py-2 px-6 font-medium text-white hover:bg-opacity-90"
                 >
                   Annuler
-                </Link>
+                </button>
                 <button
                   type='submit'
                   className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
