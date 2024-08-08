@@ -1,4 +1,71 @@
-function PlanificationPage() {
+import { useEffect, useState } from "react";
+
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
+import Swal from "sweetalert2";
+import { Navigate } from "react-router-dom";
+import ApiManager from "../../api";
+
+function PlanningExam() {
+  const Form = useForm();
+  const { register, handleSubmit } = Form;
+  const [rooms, setRooms] = useState([]);
+  const [supervisors, setSupervisors] = useState([]);
+
+  useEffect(() => {
+    fetchSupervisors();
+    fetchRoom();
+  }, []);
+  const onSubmit = (data) => {
+    const addExam = {
+      examDate: data.examDate,
+      duration: `${data.hour}:${data.minute}`,
+      startTime: `${data.Debuthour}:${data.Debutminute}`,
+      examType: parseInt(data.examtype),
+      yearId: data.Year,
+      yearType: parseInt(data.YearType),
+      filiereId: data.filiere,
+      unitOfFormationId: data.uof,
+      roomId: data.room,
+      supervisorId: data.supervisor,
+    };
+    console.log(addExam);
+
+    ApiManager.post("/Exam", addExam)
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          Navigate("/PlanningExam");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding Exam:", error);
+      });
+  };
+
+  const fetchRoom = async () => {
+    try {
+      const response = await ApiManager.get("/Room");
+      setRooms(response.data);
+    } catch (error) {
+      console.error("Error fetching Room:", error);
+    }
+  };
+
+  const fetchSupervisors = async () => {
+    try {
+      const response = await ApiManager.get("/Supervisor");
+      setSupervisors(response.data);
+    } catch (error) {
+      console.error("Error fetching supervisors:", error);
+    }
+  };
   return (
     <>
       <div className="mt-6 gap-9 sm:grid-cols-2">
@@ -238,4 +305,4 @@ function PlanificationPage() {
   );
 }
 
-export default PlanificationPage;
+export default PlanningExam;

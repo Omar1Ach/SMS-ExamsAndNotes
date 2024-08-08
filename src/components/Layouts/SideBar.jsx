@@ -39,7 +39,7 @@ const Sidebar = () => {
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-300 p-2 rounded-md"
                     >
                       <FaCalendarAlt className="text-gray-500" />
-                      <Link to="/Planification">Planification</Link>
+                      <Link to="/PlanningExam">Planification</Link>
                     </a>
                   </li>
 

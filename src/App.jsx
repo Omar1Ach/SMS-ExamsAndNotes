@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Planification from "./Pages/PlanificationPage";
 import Sidebar from "./components/Layouts/SideBar";
 import Header from "./components/Layouts/Header";
+import ListExam from "./components/Organism/ListExam";
+import PlanningExam from "./components/Organism/PlanningExam";
 function App() {
   return (
     <Router>
@@ -11,7 +12,8 @@ function App() {
           <Header />
           <div className="p-10">
             <Routes>
-              <Route path="/Planification" element={<Planification />} />
+              <Route path="/PlanningExam" element={<ListExam />} />
+              <Route path="/PlanningExam/Create" element={<PlanningExam />} />
             </Routes>
           </div>
         </div>
