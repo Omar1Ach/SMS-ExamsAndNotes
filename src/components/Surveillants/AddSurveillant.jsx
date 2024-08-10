@@ -4,14 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AddSurveillant = () => {
-  const [FirstName, setFirstName] = useState('');
-  const [LastName, setLastName] = useState('');
-  const [Title, setTitle] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [title, setTitle] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!FirstName || !LastName || !Title) {
+    if (!firstName || !lastName || !title) {
       Swal.fire({
         title: "Assurez-vous de remplir tout!",
         icon: "error",
@@ -20,19 +20,19 @@ const AddSurveillant = () => {
     }
 
     const formData = {
-      firstName: FirstName,
-      lastName: LastName,
-      title: Title,
+      firstName: firstName,
+      lastName: lastName,
+      title: title,
     };
 
     try {
-      const response = await axios.post('http://localhost:5163/api/[controller]', formData); // Use the correct URL
+      const response = await axios.post('http://localhost:5163/api/supervisor', formData); // Correct URL
       if (response.status === 200) {
         Swal.fire({
           title: "Surveillant ajouté avec succès!",
           icon: "success",
         });
-        navigate('/surveillant-list');
+        navigate('/Surveillants');
       } else {
         Swal.fire({
           title: "Erreur lors de l'ajout du surveillant!",

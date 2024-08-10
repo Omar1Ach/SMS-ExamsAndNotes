@@ -7,9 +7,10 @@ import axios from 'axios';
 const SurveillantList = () => {
   const [listData, setListData] = useState([]);
 
+
   const fetchSurveillants = async () => {
     try {
-      const response = await axios.get('http://localhost:5163/api/[controller]'); // Use the correct URL
+      const response = await axios.get('http://localhost:5163/api/supervisor');
       setListData(response.data);
     } catch (error) {
       console.error('Error fetching surveillants:', error);
@@ -31,7 +32,7 @@ const SurveillantList = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5163/api/supervisor/${supervisorId}`); // Use the correct URL
+          await axios.delete(`http://localhost:5163/api/supervisor/${supervisorId}`);
           fetchSurveillants();
           Swal.fire("Supprimé!", "L'élément a été supprimé.", "success");
         } catch (error) {
@@ -40,6 +41,7 @@ const SurveillantList = () => {
       }
     });
   };
+
 
   return (
     <div className="rounded-sm border m-6 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -69,10 +71,10 @@ const SurveillantList = () => {
           </div>
         </div>
 
-        {listData.map((list, key) => (
+        {listData.map((list) => (
           <div
-            className={`grid grid-cols-2 sm:grid-cols-3 ${key === listData.length - 1 ? '' : 'border-b border-stroke dark:border-strokedark'}`}
-            key={list.juryMemberId}
+            className={`grid grid-cols-2 sm:grid-cols-3 border-b border-stroke dark:border-strokedark`}
+            key={list.id}
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
               <p className="hidden text-black dark:text-white sm:block font-semibold">
@@ -83,10 +85,10 @@ const SurveillantList = () => {
               <p className="text-black">{list.title}</p>
             </div>
             <div className="hidden items-center justify-center text-2xl p-2.5 sm:flex xl:p-5 gap-3">
-              <Link to={`/update/${list.juryMemberId}`}>
+              <Link to={`/update/${list.id}`}>
                 <FaRegEdit className='text-graydark cursor-pointer' />
               </Link>
-              <button onClick={() => handleDelete(list.juryMemberId)} className="text-red-600 cursor-pointer">
+              <button onClick={() => handleDelete(list.id)} className="text-red-600 cursor-pointer">
                 Supprimer
               </button>
             </div>
