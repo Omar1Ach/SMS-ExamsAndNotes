@@ -69,6 +69,15 @@ const Sidebar = () => {
                       <span>Profile</span>
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      to="/ListTest"
+                      className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
+                    >
+                      <FaCalendarAlt className="text-gray-500" />
+                      <span>Planification Test</span>
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </nav>
