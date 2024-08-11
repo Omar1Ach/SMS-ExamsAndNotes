@@ -10,7 +10,6 @@ const ListTest = () => {
   const [tests, setTests] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch tests from the backend
   const fetchTests = async () => {
     try {
       const response = await ApiManager.get('/Test');
@@ -22,16 +21,15 @@ const ListTest = () => {
   };
 
   useEffect(() => {
-    fetchTests(); // Fetch the tests when the component loads
+    fetchTests();
   }, []);
 
-  // Handle deletion of a test
   const handleDelete = async (testId) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
       try {
         const response = await ApiManager.delete(`/Test/${testId}`);
         if (response.status === 200) {
-          setTests(tests.filter(test => test.id !== testId)); // Update the state to remove the deleted test
+          setTests(tests.filter(test => test.id !== testId));
           toast.success("Test supprimé avec succès !");
         } else {
           toast.error("Erreur lors de la suppression du test.");

@@ -1,28 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ApiManager from '../../api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function PlanificationTestPage({ testData }) {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: {
-      name: testData?.name || '',
-      description: testData?.description || '',
-      testStatement: testData?.testStatement || '',
-      testCorrection: testData?.testCorrection || '',
-      trainerId: testData?.trainerId || '',
-      unitOfFormationId: testData?.unitOfFormationId || '',
-    },
-  });
-
+function UpdateTest() {
+  const { id } = useParams(); // Get the test ID from the URL
+  const [testData, setTestData] = useState(null);
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTestData = async () => {
+      try {
+        console.log("Fetching test data for ID:", id); // Debug log
+        const response = await ApiManager.get(`/Test/${id}`);
+        if (response.data) {
+          setTestData(response.data);
+          setValue('name', response.data.name);
+          setValue('description', response.data.description);
+          setValue('testStatement', response.data.testStatement);
+          setValue('testCorrection', response.data.testCorrection);
+          setValue('trainerId', response.data.trainerId);
+          setValue('unitOfFormationId', response.data.unitOfFormationId);
+        } else {
+          toast.error('Failed to load test data.');
+          console.error('Test data not found:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching test data:', error);
+        toast.error('Failed to load test data.');
+      }
+    };
+
+    if (id) {
+      fetchTestData();
+    } else {
+      toast.error('No ID found in URL.');
+    }
+  }, [id, setValue]);
 
   const onSubmit = async (data) => {
     try {
-      console.log("Form Data Captured:", data);
-
       const payload = {
         name: data.name,
         description: data.description,
@@ -31,28 +51,22 @@ function PlanificationTestPage({ testData }) {
         trainerId: data.trainerId,
         unitOfFormationId: data.unitOfFormationId,
       };
-
-      console.log("Payload to Send:", payload);
-
-      let response;
-      if (testData?.id) {
-        response = await ApiManager.put(`/Test/${testData.id}`, payload);
-      } else {
-        response = await ApiManager.post('/Test', payload);
-      }
-
-      console.log('API Response:', response.data);
-
-      if (response.status === 200 || response.status === 201) {
-        console.log('Test submitted successfully:', response.data);
-        toast.success('Test submitted successfully!');
+  
+      const response = await ApiManager.put(`/Test/${id}`, payload);
+  
+      if (response.status === 200) {
+        toast.success('Test updated successfully!');
         navigate('/ListTest');
+      } else {
+        toast.error('Failed to update test. Please try again.');
+        console.error('Failed to update:', response);
       }
     } catch (error) {
-      console.error('Error submitting test data:', error.response?.data || error.message);
-      toast.error('Failed to submit test. Please try again.');
+      console.error('Error updating test data:', error);
+      toast.error('Failed to update test. Please try again.');
     }
   };
+  
 
   const handleCancel = () => {
     navigate('/ListTest');
@@ -64,7 +78,7 @@ function PlanificationTestPage({ testData }) {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Planifier un test
+              Mettre à jour le test
             </h3>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -159,7 +173,7 @@ function PlanificationTestPage({ testData }) {
                   type="submit"
                   className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
                 >
-                  Ajouter
+                  Mettre à jour
                 </button>
               </div>
             </div>
@@ -170,4 +184,4 @@ function PlanificationTestPage({ testData }) {
   );
 }
 
-export default PlanificationTestPage;
+export default UpdateTest;

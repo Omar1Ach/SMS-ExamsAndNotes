@@ -7,6 +7,7 @@ import Sidebar from "./components/Layouts/SideBar";
 import Header from "./components/Layouts/Header";
 import PlanificationTestPage from "./Pages/Tests/PlanificationTest";
 import ListTest from "./Pages/Tests/ListTests";
+import EditTest from "./Pages/Tests/UpdateTest";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
               <Route path="/update-room/:id" element={<UpdateRoom />} />
               <Route path="/PlanningTest/create" element={<PlanificationTestPage />} />
               <Route path="/ListTest" element={<ListTest />} />
-              <Route path="/update-test/:id" element={<PlanificationTestPage />} />
+              <Route path="/update-test/:id" element={<EditTest />} />
             </Routes>
           </div>
         </div>
