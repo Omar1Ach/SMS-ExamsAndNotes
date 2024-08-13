@@ -1,8 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Sidebar from "./components/Layouts/SideBar";
-import Header from "./components/Layouts/Header";
 import ListExam from "./components/Organism/ListExam";
 import PlanningExam from "./components/Organism/PlanningExam";
+import SurveillantList from "./components/Surveillants/SurveillantList.jsx";
+import AddSurveillant from "./components/Surveillants/AddSurveillant.jsx";
+import UpdateSurveillant from "./components/Surveillants/UpdateSurveillant.jsx";
+import Header from "./components/Layouts/Header";
+import Sidebar from "./components/Layouts/SideBar";
+
 function App() {
   return (
     <Router>
@@ -14,6 +18,9 @@ function App() {
             <Routes>
               <Route path="/PlanningExam" element={<ListExam />} />
               <Route path="/PlanningExam/Create" element={<PlanningExam />} />
+              <Route path="/Surveillants" element={<SurveillantList />} />
+              <Route path="/add-Surveillant" element={<AddSurveillant />} />
+              <Route path="/Update/:id" element={<UpdateSurveillant />} />
             </Routes>
           </div>
         </div>
