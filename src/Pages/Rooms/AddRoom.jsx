@@ -1,54 +1,43 @@
-import React, { useState } from "react";
-import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ApiManager from '../../api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const AddSurveillant = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [title, setTitle] = useState("");
+const AddRoom = () => {
+  const [roomType, setRoomType] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [roomName, setRoomName] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!firstName || !lastName || !title) {
-      Swal.fire({
-        title: "Assurez-vous de remplir tout!",
-        icon: "error",
-      });
+    if (!roomType || !capacity || !roomName) {
+      toast.error("Assurez-vous de remplir tout!");
       return;
     }
 
     const formData = {
-      firstName: firstName,
-      lastName: lastName,
-      title: title,
+      roomType: parseInt(roomType),
+      capacity: parseInt(capacity),
+      roomName: roomName,
     };
 
     try {
-      const response = await axios.post(
-        "https://localhost:7263/api/supervisor",
-        formData
-      ); // Correct URL
+      const response = await ApiManager.post('/Room', formData);
       if (response.status === 200) {
-        Swal.fire({
-          title: "Surveillant ajouté avec succès!",
-          icon: "success",
-        });
-        navigate("/Surveillants");
+        toast.success("Salle ajoutée avec succès!");
+        navigate('/room-list');
       } else {
-        Swal.fire({
-          title: "Erreur lors de l'ajout du surveillant!",
-          icon: "error",
-        });
+        toast.error("Erreur lors de l'ajout de la salle!");
       }
     } catch (error) {
-      Swal.fire({
-        title: "Erreur réseau!",
-        text: error.message,
-        icon: "error",
-      });
+      toast.error(`Erreur réseau! ${error.message}`);
     }
+  };
+
+  const handleCancel = () => {
+    navigate('/room-list');
   };
 
   return (
@@ -57,7 +46,7 @@ const AddSurveillant = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Créer Surveillant
+              Créer Salle
             </h3>
           </div>
           <form onSubmit={handleSubmit}>
@@ -65,50 +54,60 @@ const AddSurveillant = () => {
               <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
                 <div className="w-full sm:w-1/2">
                   <label className="mb-2.5 block text-black dark:text-white">
-                    Prénom <span className="text-meta-1">*</span>
+                    Type de salle <span className="text-meta-1">*</span>
+                  </label>
+                  <select
+                    value={roomType}
+                    onChange={(e) => setRoomType(e.target.value)}
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    required
+                  >
+                    <option value="" disabled>
+                      Sélectionnez le type de salle
+                    </option>
+                    <option value={0}>Salle normale</option>
+                    <option value={1}>Salle de pratique</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
+                <div className="w-full sm:w-1/2">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Capacité <span className="text-meta-1">*</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="Entrez votre prénom"
+                    placeholder="Entrez la capacité"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     required
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                  <label className="mt-8 mb-2.5 block text-black dark:text-white">
-                    Nom de famille <span className="text-meta-1">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Entrez votre nom de famille"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    required
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => setCapacity(e.target.value)}
                   />
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
                 <div className="w-full sm:w-1/2">
                   <label className="mb-2.5 block text-black dark:text-white">
-                    Titre <span className="text-meta-1">*</span>
+                    Nom de la salle <span className="text-meta-1">*</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="Entrez votre titre"
+                    placeholder="Entrez le nom de la salle"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     required
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setRoomName(e.target.value)}
                   />
                 </div>
               </div>
               <div className="flex justify-end gap-4.5">
-                <Link
-                  to="/Home"
+                <button
+                  type="button"
+                  onClick={handleCancel}
                   className="flex justify-center rounded bg-meta-1 py-2 px-6 font-medium text-white hover:bg-opacity-90"
                 >
                   Annuler
-                </Link>
+                </button>
                 <button
-                  type="submit"
+                  type='submit'
                   className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
                 >
                   Ajouter
@@ -118,8 +117,9 @@ const AddSurveillant = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
-export default AddSurveillant;
+export default AddRoom;

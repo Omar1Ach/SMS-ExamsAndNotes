@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { FaRegEdit } from "react-icons/fa";
-import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const SurveillantList = () => {
   const [listData, setListData] = useState([]);
 
-
   const fetchSurveillants = async () => {
     try {
-      const response = await axios.get('http://localhost:5163/api/supervisor');
+      const response = await axios.get("https://localhost:7263/api/supervisor");
       setListData(response.data);
     } catch (error) {
-      console.error('Error fetching surveillants:', error);
+      console.error("Error fetching surveillants:", error);
     }
   };
 
@@ -28,11 +27,13 @@ const SurveillantList = () => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Oui, Supprimer"
+      confirmButtonText: "Oui, Supprimer",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5163/api/supervisor/${supervisorId}`);
+          await axios.delete(
+            `https://localhost:7263/api/supervisor/${supervisorId}`
+          );
           fetchSurveillants();
           Swal.fire("Supprimé!", "L'élément a été supprimé.", "success");
         } catch (error) {
@@ -41,7 +42,6 @@ const SurveillantList = () => {
       }
     });
   };
-
 
   return (
     <div className="rounded-sm border m-6 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -86,9 +86,12 @@ const SurveillantList = () => {
             </div>
             <div className="hidden items-center justify-center text-2xl p-2.5 sm:flex xl:p-5 gap-3">
               <Link to={`/update/${list.id}`}>
-                <FaRegEdit className='text-graydark cursor-pointer' />
+                <FaRegEdit className="text-graydark cursor-pointer" />
               </Link>
-              <button onClick={() => handleDelete(list.id)} className="text-red-600 cursor-pointer">
+              <button
+                onClick={() => handleDelete(list.id)}
+                className="text-red-600 cursor-pointer"
+              >
                 Supprimer
               </button>
             </div>
