@@ -14,9 +14,8 @@ const Sidebar = () => {
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-screen bg-blue-dark text-white ${
-          isOpen ? "w-55" : "w-16"
-        } transition-width duration-300`}
+        className={`fixed top-0 left-0 h-screen bg-blue-dark text-white ${isOpen ? "w-64" : "w-16"
+          } transition-all duration-300`}
       >
         {isOpen && (
           <div className="py-7 px-2">
@@ -42,7 +41,6 @@ const Sidebar = () => {
                       <span>Planification</span>
                     </Link>
                   </li>
-
                   <li>
                     <Link
                       to="/RoomPage"
@@ -54,7 +52,7 @@ const Sidebar = () => {
                   </li>
                   <li>
                     <Link
-                      to="#"
+                      to="/Surveillants"
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
                     >
                       <MdSupervisorAccount className="text-gray-500" />
@@ -105,9 +103,8 @@ const Sidebar = () => {
         </button>
       </div>
       <div
-        className={`flex-1 transition-margin duration-300 ${
-          isOpen ? "ml-55" : "ml-16"
-        } overflow-auto`}
+        className={`flex-1 transition-all duration-300 ${isOpen ? "ml-64" : "ml-16"
+          } overflow-auto`}
       ></div>
     </div>
   );

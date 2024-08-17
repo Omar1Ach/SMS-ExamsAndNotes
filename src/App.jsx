@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Planification from "./Pages/PlanificationPage";
-import Sidebar from "./components/Layouts/SideBar";
+import ListExam from "./components/Organism/ListExam";
+import PlanningExam from "./components/Organism/PlanningExam";
+import SurveillantList from "./components/Surveillants/SurveillantList.jsx";
+import AddSurveillant from "./components/Surveillants/AddSurveillant.jsx";
+import UpdateSurveillant from "./components/Surveillants/UpdateSurveillant.jsx";
 import Header from "./components/Layouts/Header";
 import ExamResultsPage from "./Pages/ExamResultsPage";
 import ExamDetailPage from "./Pages/ExamDetailPage";
@@ -8,6 +11,8 @@ import StagiaireListPage from "./Pages/StagiaireListPage";
 import TestResultsPage from "./Pages/TestResultsPage"; 
 import TestDetailPage from "./Pages/TestDetailPage";
 import TestStagiaireList from "./Pages/TestStagiaireListe";
+import Sidebar from "./components/Layouts/SideBar";
+
 
 function App() {
   return (
@@ -18,7 +23,7 @@ function App() {
           <Header />
           <div className="p-10">
             <Routes>
-              <Route path="/Planification" element={<Planification />} />
+              
               <Route path="/ExamResultsPage" element={<ExamResultsPage />} />
               <Route path="/ExamDetails/:id" element={<ExamDetailPage />} />
               <Route path="/stagiaire-list/:id" element={<StagiaireListPage />} />
@@ -27,6 +32,11 @@ function App() {
               <Route path="/TestStagiaireList/:id" element={<TestStagiaireList />} />
               
               
+              <Route path="/PlanningExam" element={<ListExam />} />
+              <Route path="/PlanningExam/Create" element={<PlanningExam />} />
+              <Route path="/Surveillants" element={<SurveillantList />} />
+              <Route path="/add-Surveillant" element={<AddSurveillant />} />
+              <Route path="/Update/:id" element={<UpdateSurveillant />} />
             </Routes>
           </div>
         </div>
