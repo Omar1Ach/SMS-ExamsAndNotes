@@ -13,6 +13,8 @@ import UpdateRoom from "./Pages/Rooms/UpdateRoom";
 import PlanificationTestPage from "./Pages/Tests/PlanificationTest";
 import ListTest from "./Pages/Tests/ListTests";
 import EditTest from "./Pages/Tests/UpdateTest";
+import VaraintExamPage from "./Pages/VariantExams/VaraintExamPage.jsx";
+import AddNewVariant from "./Pages/VariantExams/AddNewVariant.jsx";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
                 path="/PlanningTest/create"
                 element={<PlanificationTestPage />}
               />
+              <Route path="/VaraintExam/create" element={<AddNewVariant />} />
+              <Route path="/VaraintExam" element={<VaraintExamPage />} />
               <Route path="/ListTest" element={<ListTest />} />
               <Route path="/update-test/:id" element={<EditTest />} />
             </Routes>
