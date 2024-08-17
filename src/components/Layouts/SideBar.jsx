@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaCalendarAlt, FaUser } from "react-icons/fa";
+import { FaCalendarAlt, FaClipboard, FaUser, FaChartBar } from "react-icons/fa";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
-import { MdMeetingRoom } from "react-icons/md";
-import { MdSupervisorAccount } from "react-icons/md";
+import { MdMeetingRoom, MdSupervisorAccount } from "react-icons/md";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +10,7 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <div className="flex">
       <div
@@ -34,41 +34,59 @@ const Sidebar = () => {
                 </h2>
                 <ul className="mt-3 space-y-2">
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      to="/Planification"
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-300 p-2 rounded-md"
                     >
                       <FaCalendarAlt className="text-gray-500" />
-                      <Link to="/Planification">Planification</Link>
-                    </a>
+                      <span>Planification</span>
+                    </Link>
                   </li>
 
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      to="/RoomPage"
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
                     >
                       <MdMeetingRoom className="text-gray-500" />
-                      <Link to="/RoomPage">Les Salles</Link>
-                    </a>
+                      <span>Les Salles</span>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      to="#"
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
                     >
                       <MdSupervisorAccount className="text-gray-500" />
                       <span>Surveillants</span>
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <Link
+                      to="/ExamResultsPage"
+                      className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
+                    >
+                      <FaClipboard className="text-gray-500" />
+                      <span>Exam Results</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/TestResultsPage"
+                      className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
+                    >
+                      <FaChartBar className="text-gray-500" />
+                      <span>Test Results</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="#"
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
                     >
                       <FaUser className="text-gray-500" />
                       <span>Profile</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
