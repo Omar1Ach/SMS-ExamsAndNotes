@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ApiManager from '../../api';
@@ -17,24 +17,24 @@ function PlanificationTestPage({ testData }) {
   });
 
   const navigate = useNavigate();
-  const [trainees, setTrainees] = useState([]);
+  const [formateurs, setFormateurs] = useState([]);
   const [unitsOfFormation, setUnitsOfFormation] = useState([]);
   const [testStatement, setTestStatement] = useState(testData?.testStatement || '');
   const [testCorrection, setTestCorrection] = useState(testData?.testCorrection || '');
 
   useEffect(() => {
-    const fetchTrainees = async () => {
+    const fetchFormateurs = async () => {
       try {
-        const response = await ApiManager.get('https://localhost:7263/api/Trainee');
-        setTrainees(response.data);
+        const response = await ApiManager.get('https://localhost:7263/api/Formateur');
+        setFormateurs(response.data);
       } catch (error) {
-        console.error('Error fetching trainees:', error);
+        console.error('Error fetching formateurs:', error);
       }
     };
 
     const fetchUnitsOfFormation = async () => {
       try {
-        const response = await ApiManager.get('https://localhost:7263/api/Filiere');
+        const response = await ApiManager.get('/Filiere');
         const units = response.data.flatMap(filiere => filiere.filiereUnitOfFormations.map(uf => uf.unitOfFormation));
         setUnitsOfFormation(units);
       } catch (error) {
@@ -42,7 +42,7 @@ function PlanificationTestPage({ testData }) {
       }
     };
 
-    fetchTrainees();
+    fetchFormateurs();
     fetchUnitsOfFormation();
   }, []);
 
@@ -83,7 +83,7 @@ function PlanificationTestPage({ testData }) {
       <div className="flex flex-col gap-9">
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black  text-3xl dark:text-white">
+            <h3 className="font-medium text-black text-3xl dark:text-white">
               Planifier un test
             </h3>
           </div>
@@ -151,9 +151,9 @@ function PlanificationTestPage({ testData }) {
                     {...register("trainerId", { required: true })}
                   >
                     <option value="">Sélectionnez un formateur</option>
-                    {trainees.map(trainee => (
-                      <option key={trainee.id} value={trainee.id}>
-                        {trainee.uniqueIdentifier}
+                    {formateurs.map(formateur => (
+                      <option key={formateur.id} value={formateur.id}>
+                        {`${formateur.nom} ${formateur.prenom}`}
                       </option>
                     ))}
                   </select>
