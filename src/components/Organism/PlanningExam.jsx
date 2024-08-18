@@ -117,6 +117,7 @@ function PlanningExam() {
   const fetchFiliere = async () => {
     try {
       const response = await ApiManager.get("/Filiere");
+      //there
       setFilieres(response.data);
     } catch (error) {
       console.error("Error fetching Filiere :", error);
