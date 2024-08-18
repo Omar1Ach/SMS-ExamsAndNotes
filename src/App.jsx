@@ -5,6 +5,12 @@ import SurveillantList from "./components/Surveillants/SurveillantList.jsx";
 import AddSurveillant from "./components/Surveillants/AddSurveillant.jsx";
 import UpdateSurveillant from "./components/Surveillants/UpdateSurveillant.jsx";
 import Header from "./components/Layouts/Header";
+import ExamResultsPage from "./Pages/ExamResultsPage";
+import ExamDetailPage from "./Pages/ExamDetailPage";
+import StagiaireListPage from "./Pages/StagiaireListPage";
+import TestResultsPage from "./Pages/TestResultsPage";
+import TestDetailPage from "./Pages/TestDetailPage";
+import TestStagiaireList from "./Pages/TestStagiaireListe";
 import Sidebar from "./components/Layouts/SideBar";
 import Planification from "./Pages/PlanificationPage";
 import AddRoom from "./Pages/Rooms/AddRoom";
@@ -25,6 +31,21 @@ function App() {
           <Header />
           <div className="p-10">
             <Routes>
+              <Route path="/ExamResultsPage" element={<ExamResultsPage />} />
+              <Route
+                path="/ExamDetails/:id/:fid"
+                element={<ExamDetailPage />}
+              />
+              <Route
+                path="/stagiaire-list/:id/:fid"
+                element={<StagiaireListPage />}
+              />
+              <Route path="/TestResultsPage" element={<TestResultsPage />} />
+              <Route path="/TestDetailPage/:id" element={<TestDetailPage />} />
+              <Route
+                path="/TestStagiaireList/:id"
+                element={<TestStagiaireList />}
+              />
               <Route path="/PlanningExam" element={<ListExam />} />
               <Route path="/PlanningExam/Create" element={<PlanningExam />} />
               <Route path="/Surveillants" element={<SurveillantList />} />

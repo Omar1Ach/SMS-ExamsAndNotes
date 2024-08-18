@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaCalendarAlt, FaUser } from "react-icons/fa";
+import { FaCalendarAlt, FaClipboard, FaUser, FaChartBar } from "react-icons/fa";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { MdMeetingRoom, MdSupervisorAccount } from "react-icons/md";
 
@@ -62,7 +62,25 @@ const Sidebar = () => {
                   </li>
                   <li>
                     <Link
-                      to="/Profile"
+                      to="/ExamResultsPage"
+                      className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
+                    >
+                      <FaClipboard className="text-gray-500" />
+                      <span>Exam Results</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/TestResultsPage"
+                      className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
+                    >
+                      <FaChartBar className="text-gray-500" />
+                      <span>Test Results</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="#"
                       className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded-md"
                     >
                       <FaUser className="text-gray-500" />

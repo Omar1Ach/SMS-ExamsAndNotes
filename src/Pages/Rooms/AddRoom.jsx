@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ApiManager from '../../api';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ApiManager from "../../api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddRoom = () => {
-  const [roomType, setRoomType] = useState('');
-  const [capacity, setCapacity] = useState('');
-  const [roomName, setRoomName] = useState('');
+  const [roomType, setRoomType] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [roomName, setRoomName] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -24,10 +24,10 @@ const AddRoom = () => {
     };
 
     try {
-      const response = await ApiManager.post('/Room', formData);
+      const response = await ApiManager.post("/Room", formData);
       if (response.status === 200) {
         toast.success("Salle ajoutée avec succès!");
-        navigate('/room-list');
+        navigate("/room-list");
       } else {
         toast.error("Erreur lors de l'ajout de la salle!");
       }
@@ -37,11 +37,11 @@ const AddRoom = () => {
   };
 
   const handleCancel = () => {
-    navigate('/room-list');
+    navigate("/room-list");
   };
 
   return (
-    <div className="m-0 mt-6 gap-9 sm:grid-cols-2 m-16">
+    <div className="m-0 mt-6 gap-9 sm:grid-cols-2">
       <div className="flex flex-col gap-9">
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -107,7 +107,7 @@ const AddRoom = () => {
                   Annuler
                 </button>
                 <button
-                  type='submit'
+                  type="submit"
                   className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
                 >
                   Ajouter
