@@ -11,14 +11,19 @@ function PlanificationTestPage({ testData }) {
     defaultValues: {
       name: testData?.name || '',
       description: testData?.description || '',
+      testStatement: testData?.testStatement || '',
+      testCorrection: testData?.testCorrection || '',
       trainerId: testData?.trainerId || '',
       unitOfFormationId: testData?.unitOfFormationId || '',
+      filiereId: testData?.filiereId || '',
     },
   });
 
   const navigate = useNavigate();
   const [formateurs, setFormateurs] = useState([]);
+  const [filieres, setFilieres] = useState([]);
   const [unitsOfFormation, setUnitsOfFormation] = useState([]);
+  const [selectedFiliere, setSelectedFiliere] = useState('');
   const [testStatement, setTestStatement] = useState(testData?.testStatement || '');
   const [testCorrection, setTestCorrection] = useState(testData?.testCorrection || '');
 
@@ -32,29 +37,43 @@ function PlanificationTestPage({ testData }) {
       }
     };
 
-    const fetchUnitsOfFormation = async () => {
+    const fetchFilieres = async () => {
       try {
         const response = await ApiManager.get('/Filiere');
-        const units = response.data.flatMap(filiere => filiere.filiereUnitOfFormations.map(uf => uf.unitOfFormation));
-        setUnitsOfFormation(units);
+        setFilieres(response.data);
       } catch (error) {
-        console.error('Error fetching units of formation:', error);
+        console.error('Error fetching filières:', error);
       }
     };
 
     fetchFormateurs();
-    fetchUnitsOfFormation();
+    fetchFilieres();
   }, []);
+
+  const handleFiliereChange = (event) => {
+    const selectedId = event.target.value;
+    setSelectedFiliere(selectedId);
+
+    const filiere = filieres.find(f => f.id === selectedId);
+
+    if (filiere && filiere.filiereUnitOfFormations) {
+      const units = filiere.filiereUnitOfFormations.map(uf => uf.unitOfFormation);
+      setUnitsOfFormation(units);
+    } else {
+      setUnitsOfFormation([]);
+    }
+  };
 
   const onSubmit = async (data) => {
     try {
       const payload = {
         name: data.name,
         description: data.description,
-        testStatement,
-        testCorrection,
+        testStatement: testStatement,
+        testCorrection: testCorrection,
         trainerId: data.trainerId,
         unitOfFormationId: data.unitOfFormationId,
+        filiereId: data.filiereId,
       };
 
       let response;
@@ -117,55 +136,53 @@ function PlanificationTestPage({ testData }) {
               </div>
 
               {/* Test Statement and Correction Fields using JoditEditor */}
-              <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
-                <div className="w-full sm:w-1/2">
-                  <label className="mb-2.5 block font-semibold text-black text-xl dark:text-white">
-                    Énoncé du test
-                  </label>
-                  <JoditEditor
-                    value={testStatement}
-                    onChange={setTestStatement}
-                  />
-                  {errors.testStatement && <span className="text-red-500">Ce champ est requis</span>}
-                </div>
-                <div className="w-full sm:w-1/2">
-                  <label className="mb-2.5 block font-semibold text-black text-xl dark:text-white">
-                    Correction du test
-                  </label>
-                  <JoditEditor
-                    value={testCorrection}
-                    onChange={setTestCorrection}
-                  />
-                  {errors.testCorrection && <span className="text-red-500">Ce champ est requis</span>}
-                </div>
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black font-semibold text-xl dark:text-white">
+                  Enoncé du test
+                </label>
+                <JoditEditor
+                  value={testStatement}
+                  onChange={content => setTestStatement(content)}
+                />
+              </div>
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black font-semibold text-xl dark:text-white">
+                  Correction du test
+                </label>
+                <JoditEditor
+                  value={testCorrection}
+                  onChange={content => setTestCorrection(content)}
+                />
               </div>
 
-              {/* Formateur (Trainer) and Unité de Formation Fields */}
+              {/* Filière and Unité de Formation Fields */}
               <div className="flex flex-col sm:flex-row gap-6 mb-4.5">
                 <div className="w-full sm:w-1/2">
-                  <label className="mb-2.5 block text-black font-semibold text-xl dark:text-white">
-                    Formateur 
+                  <label className="mb-2.5 block font-semibold text-black text-xl dark:text-white">
+                    Filière
                   </label>
                   <select
                     className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition"
-                    {...register("trainerId", { required: true })}
+                    {...register("filiereId", { required: true })}
+                    onChange={handleFiliereChange}
                   >
-                    <option value="">Sélectionnez un formateur</option>
-                    {formateurs.map(formateur => (
-                      <option key={formateur.id} value={formateur.id}>
-                        {`${formateur.nom} ${formateur.prenom}`}
+                    <option value="">Sélectionnez une filière</option>
+                    {filieres.map(filiere => (
+                      <option key={filiere.id} value={filiere.id}>
+                        {filiere.nomFiliere}
                       </option>
                     ))}
                   </select>
-                  {errors.trainerId && <span className="text-red-500">Ce champ est requis</span>}
+                  {errors.filiereId && <span className="text-red-500">Ce champ est requis</span>}
                 </div>
                 <div className="w-full sm:w-1/2">
                   <label className="mb-2.5 block font-semibold text-black text-xl dark:text-white">
-                    Unité de formation 
+                    Unité de formation
                   </label>
                   <select
                     className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition"
                     {...register("unitOfFormationId", { required: true })}
+                    disabled={!selectedFiliere}
                   >
                     <option value="">Sélectionnez une unité de formation</option>
                     {unitsOfFormation.map(unit => (
@@ -176,6 +193,25 @@ function PlanificationTestPage({ testData }) {
                   </select>
                   {errors.unitOfFormationId && <span className="text-red-500">Ce champ est requis</span>}
                 </div>
+              </div>
+
+              {/* Formateur (Trainer) Field */}
+              <div className="mb-4.5">
+                <label className="mb-2.5 block text-black font-semibold text-xl dark:text-white">
+                  Formateur
+                </label>
+                <select
+                  className="w-full rounded-[4px] border-[1px] border-[#E0E0E0] text-[16px] bg-[#FFFFFF] py-3 px-5 text-[#424242] outline-none transition"
+                  {...register("trainerId", { required: true })}
+                >
+                  <option value="">Sélectionnez un formateur</option>
+                  {formateurs.map(formateur => (
+                    <option key={formateur.id} value={formateur.id}>
+                      {`${formateur.nom} ${formateur.prenom}`}
+                    </option>
+                  ))}
+                </select>
+                {errors.trainerId && <span className="text-red-500">Ce champ est requis</span>}
               </div>
 
               {/* Cancel and Submit buttons */}
