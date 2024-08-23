@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import Swal from "sweetalert2";
-import { Navigate } from "react-router-dom";
+import { Navigate, redirect } from "react-router-dom";
 import ApiManager from "../../api";
+import { render } from "react-dom";
 
 function PlanningExam() {
   const Form = useForm();
@@ -81,14 +82,14 @@ function PlanningExam() {
     ApiManager.post("/Exam", addExam)
       .then((response) => {
         if (response.status === 200) {
-          Swal.fire({
-            position: "top-center",
-            icon: "success",
-            title: "Your work has been saved",
-            showConfirmButton: false,
-            timer: 1000,
-          });
-          Navigate("/PlanningExam");
+          // Swal.fire({
+          //   position: "top-center",
+          //   icon: "success",
+          //   title: "Your work has been saved",
+          //   showConfirmButton: false,
+          //   timer: 1000,
+          // });
+          redirect("/planningExam");
         } else if (response.status === 207) {
           Swal.fire({
             position: "top-center",
