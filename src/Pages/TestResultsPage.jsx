@@ -4,22 +4,22 @@ import ModalTest from "../components/ModalTest";
 import { useNavigate } from "react-router-dom";
 
 const TestResultsPage = () => {
-  const [tests, setTests] = useState([]);
+  const [test, setTest] = useState([]);
   const [selectedTest, setSelectedTest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTests = async () => {
+    const fetchTest = async () => {
       try {
         const response = await axios.get("https://localhost:7263/api/Test");
-        setTests(response.data);
+        setTest([...response.data]);
       } catch (error) {
-        console.error("Error fetching tests:", error);
+        console.error("Error fetching test:", error);
       }
     };
 
-    fetchTests();
+    fetchTest();
   }, []);
 
   const openModal = (test) => {
@@ -33,42 +33,49 @@ const TestResultsPage = () => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/TestDetailPage/${selectedTest.id}`);
+    navigate(`/TestDetailPage/${selectedTest.id}/${selectedTest.filiere.id}`);
     closeModal();
   };
-  const handleViewTestStagiaires = () => {
-    navigate(`/TestStagiaireList/${selectedTest.id}`);
+
+  const handleViewStagiaires = () => {
+    navigate(`/TestStagiaireList/${selectedTest.id}/${selectedTest.filiere.id}`);
     closeModal();
   };
 
   return (
     <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {tests.map((test) => (
-        <div
-          key={test.id}
-          onClick={() => openModal(test)}
-          className="bg-gray-100 rounded-lg shadow-md border border-gray-300 transition-transform transform hover:scale-105 cursor-pointer"
-          style={{ marginBottom: '1rem' }}
-        >
-          <div className="p-4 border-b border-gray-300">
-            <h3 className="text-lg font-semibold text-gray-800">
-              {test.name} 
-            </h3>
+      {test.length === 0 ? (
+        <p>Aucun test disponible</p>
+      ) : (
+        test.map((testItem) => (
+          <div
+            key={testItem.id}
+            onClick={() => openModal(testItem)}
+            className="bg-gray-100 rounded-lg shadow-md border border-gray-300 transition-transform transform hover:scale-105 cursor-pointer"
+            style={{ marginBottom: "1rem" }}
+          >
+            <div className="p-4 border-b border-gray-300">
+              <h3 className="text-lg font-semibold text-gray-800">{testItem.id}</h3>
+            </div>
+            <div className="p-4">
+              <p className="text-gray-600">
+                <strong className="font-medium">Filière :</strong>{" "}
+                {testItem.filiereId}
+              </p>
+              <p className="text-gray-600">
+                <strong className="font-medium">Description :</strong> {testItem.description}
+              </p>
+            </div>
           </div>
-          <div className="p-4">
-            <p className="text-gray-600">
-              <strong className="font-medium">Description :</strong> {test.description} {/* Affichage de la description du test */}
-            </p>
-          </div>
-        </div>
-      ))}
+        ))
+      )}
       {selectedTest && (
         <ModalTest
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirm={handleViewDetails}
-          onViewTestStagiaires={handleViewTestStagiaires}
-          examName={selectedTest.name}  
+          onViewTestStagiaires={handleViewStagiaires}
+          testName={selectedTest.id} // Utilisez "testName" ici
         />
       )}
     </div>

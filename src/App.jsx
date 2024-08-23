@@ -40,10 +40,11 @@ function App() {
                 path="/stagiaire-list/:id/:fid"
                 element={<StagiaireListPage />}
               />
-              <Route path="/TestResultsPage" element={<TestResultsPage />} />
-              <Route path="/TestDetailPage/:id" element={<TestDetailPage />} />
+              <Route path="/TestResultsPage"element={<TestResultsPage />} />
+              <Route path="/TestDetailPage/:id/:fid" 
+              element={<TestDetailPage />} />
               <Route
-                path="/TestStagiaireList/:id"
+                path="/TestStagiaireList/:id/:fid"
                 element={<TestStagiaireList />}
               />
               <Route path="/PlanningExam" element={<ListExam />} />

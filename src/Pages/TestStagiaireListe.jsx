@@ -1,26 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import ApiManager from "../api";
 
-export default function TestStagiaireList() {
-  const { id } = useParams(); 
+export default function TestStagiaireListe() {
+  const { id, fid } = useParams();
   const [stagiaires, setStagiaires] = useState([]);
+  const [trainees, setTrainees] = useState([]);
 
   useEffect(() => {
+    console.log("ID:", id);
+    console.log("FID:", fid);
+
     if (id) {
       const fetchStagiaires = async () => {
         try {
-          
-          const response = await axios.get(`https://localhost:7263/api/TestResult/${id}`);
-          setStagiaires(response.data || []);
+          const response = await ApiManager.get(`/TestResult/${id}`);
+          console.log("Données des stagiaires:", response.data);
+          setStagiaires(response.data.stagiaireTestNoteDetails || []);
         } catch (error) {
-          console.error("Erreur lors de la récupération des stagiaires:", error);
+          console.error("Erreur lors de la récupération des stagiaires:", error.response ? error.response.data : error.message);
         }
       };
-
       fetchStagiaires();
+    } else {
+      console.error("ID est undefined.");
     }
-  }, [id]);
+
+    if (fid) {
+      const fetchTrainees = async () => {
+        try {
+          const response = await ApiManager.get(`/Trainee/${fid}`);
+          console.log("Données des stagiaires:", response.data);
+          setTrainees([response.data]);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des stagiaires:", error.response ? error.response.data : error.message);
+        }
+      };
+      fetchTrainees();
+    } else {
+      console.error("FID est undefined.");
+    }
+  }, [id, fid]);
+
+  console.log("Stagiaires dans le state:", stagiaires);
+  console.log("Trainees dans le state:", trainees);
 
   return (
     <div className="p-6">
@@ -32,24 +55,41 @@ export default function TestStagiaireList() {
           <table className="min-w-full bg-white border border-gray-300 rounded-lg">
             <thead className="bg-gray-200 text-gray-800">
               <tr className="bg-blue-100">
-                <th className="border border-gray-300 px-6 py-3 text-center font-bold bg-blue-200">Stagiaire ID</th>
-                <th className="border border-gray-300 px-6 py-3 text-center font-bold bg-blue-200">Note</th>
+                <th className="border border-gray-300 px-6 py-3 text-center font-bold bg-blue-200">
+                  Stagiaire
+                </th>
+                <th className="border border-gray-300 px-6 py-3 text-left text-sm font-semibold bg-blue-200">
+                  Note
+                </th>
               </tr>
             </thead>
             <tbody>
-              {stagiaires.map((stagiaire, index) => (
-                <tr key={stagiaire.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                  <td className="border border-gray-300 px-6 py-3 text-sm text-gray-700">
-                    {stagiaire.stagiaireId}
-                  </td>
-                  <td className="border border-gray-300 px-6 py-3 text-sm text-gray-700 text-center">
-                    {stagiaire.note}
-                  </td>
-                </tr>
-              ))}
-              {stagiaires.length === 0 && (
+              {stagiaires.length > 0 ? (
+                stagiaires.map((stagiaireDetail, index) => {
+                  const traineeDetail = trainees.find(t => t.id === stagiaireDetail.stagiaireId);
+                  console.log(`Stagiaire: ${traineeDetail ? `${traineeDetail.firstName} ${traineeDetail.lastName}` : "Inconnu"}, Note: ${stagiaireDetail.note}`);
+                  return (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                    >
+                      <td className="border border-gray-300 px-6 py-3 text-sm text-gray-700">
+                        {traineeDetail
+                          ? `${traineeDetail.firstName || "Inconnu"} ${traineeDetail.lastName || ""}`
+                          : "Inconnu"}
+                      </td>
+                      <td className="border border-gray-300 px-6 py-3 text-sm text-gray-700 text-center">
+                        {stagiaireDetail.note || "Non disponible"}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
                 <tr>
-                  <td colSpan="2" className="border border-gray-300 px-6 py-3 text-center text-sm text-gray-700">
+                  <td
+                    colSpan="2"
+                    className="border border-gray-300 px-6 py-3 text-center text-sm text-gray-700"
+                  >
                     Aucun stagiaire trouvé.
                   </td>
                 </tr>

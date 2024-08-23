@@ -17,25 +17,24 @@ export default function StagiaireListPage() {
           const response = await ApiManager.get(`ExamResult/id?id=${id}`);
           setStagiaires(response.data || []);
         } catch (error) {
-          console.error(
-            "Erreur lors de la récupération des stagiaires:",
-            error
-          );
+          console.error("Erreur lors de la récupération des stagiaires:", error);
         }
       };
       fetchStagiaires();
     }
-    const fetchExamWithFiilere = async () => {
-      try {
-        const response = await ApiManager.get(`/Trainee/${fid}`);
-        setTrainee(response.data);
-        console.log(response);
-      } catch (error) {
-        console.error("Error fetching Room:", error);
-      }
-    };
-    fetchExamWithFiilere();
-  }, []);
+    
+    if (fid) {
+      const fetchTrainee = async () => {
+        try {
+          const response = await ApiManager.get(`/Trainee/${fid}`);
+          setTrainee(response.data);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des informations du stagiaire:", error);
+        }
+      };
+      fetchTrainee();
+    }
+  }, [id, fid]);
 
   const handleEdit = (stagiaireId) => {
     setEditId(stagiaireId);
@@ -62,7 +61,7 @@ export default function StagiaireListPage() {
         ],
       };
 
-      await axios.put(`https://localhost:7263/api/ExamResult`, data);
+      await axios.put("https://localhost:7263/api/ExamResult", data);
 
       const updatedStagiaires = stagiaires.map((stagiaire) =>
         stagiaire.stagiaireId === editId ? editedStagiaire : stagiaire
@@ -111,11 +110,7 @@ export default function StagiaireListPage() {
                   className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
                 >
                   <td className="border border-gray-300 px-6 py-3 text-sm text-gray-700">
-                    {trainee.map((t) => {
-                      if (t.id === stagiaire.stagiaireId) {
-                        return t.firstName + " " + t.lastName;
-                      }
-                    })}
+                    {trainee.find((t) => t.id === stagiaire.stagiaireId)?.firstName + " " + trainee.find((t) => t.id === stagiaire.stagiaireId)?.lastName}
                   </td>
                   <td className="border border-gray-300 px-6 py-3 text-sm text-gray-700">
                     <div className="grid grid-cols-2 gap-2">

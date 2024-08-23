@@ -33,12 +33,12 @@ const ExamResultsPage = () => {
   };
 
   const handleViewDetails = () => {
-    navigate(`/ExamDetails/${selectedExam.id}/${selectedExam.filiereId}`);
+    navigate(`/ExamDetails/${selectedExam.id}/${selectedExam.filiere.id}`);
     closeModal();
   };
 
   const handleViewStagiaires = () => {
-    navigate(`/stagiaire-list/${selectedExam.id}/${selectedExam.filiereId}`);
+    navigate(`/stagiaire-list/${selectedExam.id}/${selectedExam.filiere.id}`);
     closeModal();
   };
 
