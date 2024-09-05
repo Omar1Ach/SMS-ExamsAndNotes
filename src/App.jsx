@@ -21,6 +21,8 @@ import ListTest from "./Pages/Tests/ListTests";
 import EditTest from "./Pages/Tests/UpdateTest";
 import VaraintExamPage from "./Pages/VariantExams/VaraintExamPage.jsx";
 import AddNewVariant from "./Pages/VariantExams/AddNewVariant.jsx";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
